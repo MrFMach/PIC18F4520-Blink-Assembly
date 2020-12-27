@@ -1,4 +1,4 @@
-MPASM 5.77                          MAIN.ASM   12-26-2020  18:43:31         PAGE  1
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -10,14 +10,14 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00004 ;******************************************************************************
                       00005 
                       00006 ;******************************************************************************
-                      00007 ;Processor directive
+                      00007 ;List directives
                       00008         
-                      00009     LIST P=18F4520              ;directive to define processor
+                      00009     list p=18F4520              ;directive to define processor
                       00010     
                       00011 ;******************************************************************************
                       00012 ;Includes
                       00013     
-                      00014 #INCLUDE <P18F4520.INC> ;processor specific variable definitions
+                      00014     #INCLUDE <P18F4520.INC>     ;processor specific variable definitions
                       00001         LIST
                       00002 
                       00003 ;==========================================================================
@@ -32,91 +32,99 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00016 ;******************************************************************************
                       00017 ;Configuration bits
                       00018 
-                      00019     CONFIG      OSC = HS            ; Pic-board Cristal Oscillator = 20 MHz     
+                      00019     CONFIG  OSC = HS            ;pic-board cristal cscillator = 20 MHz     
                       00020 
                       00021 ;******************************************************************************
                       00022 ;Reset Vector
                       00023 
-                      00024 RES_VECT  CODE    0x0000            ; processor reset vector
-000000 EF?? F???      00025     GOTO    START                   ; go to beginning of program
+                      00024 RES_VECT    CODE    0x0000      ;processor reset vector
+000000 EF?? F???      00025     GOTO    START               ;go to beginning of program
                       00026 
                       00027 ;******************************************************************************
-                      00028 ;Adicionar interrupções aqui, se for usado
+                      00028 ;Add interrupts here if used
                       00029     
-                      00030     
-                      00031 ;******************************************************************************
-                      00032 ;Main
-                      00033 
-                      00034 MAIN_PROG CODE                      ; let linker place main program
-                      00035  
-  0000000C            00036 DCounter1 EQU 0X0C
-  0000000D            00037 DCounter2 EQU 0X0D
-  0000000E            00038 DCounter3 EQU 0X0E
-                      00039 
-000000                00040 DELAY_1s:
-000000 0E6D           00041     MOVLW 0X6d
-000002 6E0C           00042     MOVWF DCounter1
-000004 0E5E           00043     MOVLW 0X5e
-MPASM 5.77                          MAIN.ASM   12-26-2020  18:43:31         PAGE  2
+                      00030 ;******************************************************************************
+                      00031 ;Main program
+                      00032 
+                      00033 MAIN_PROG CODE                  ;let linker place main program
+                      00034  
+Warning[207]: Found label after column 1. (DCounter1)
+  0000000C            00035     DCounter1 EQU 0x0C
+Warning[207]: Found label after column 1. (DCounter2)
+  0000000D            00036     DCounter2 EQU 0x0D
+Warning[207]: Found label after column 1. (DCounter3)
+  0000000E            00037     DCounter3 EQU 0x0E
+                      00038 
+000000                00039 DELAY_1s:
+000000 0E6D           00040     MOVLW 0x6D
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-000006 6E0D           00044     MOVWF DCounter2
-000008 0E1A           00045     MOVLW 0X1a
-00000A 6E0E           00046     MOVWF DCounter3
-00000C                00047 LOOPD1:
-00000C 2E0C           00048     DECFSZ DCounter1, 1
-00000E EF?? F???      00049     GOTO LOOPD1
-000012 2E0D           00050     DECFSZ DCounter2, 1
-000014 EF?? F???      00051     GOTO LOOPD1
-000018 2E0E           00052     DECFSZ DCounter3, 1
-00001A EF?? F???      00053     GOTO LOOPD1
-00001E 0012           00054     RETURN
-                      00055     
-000020                00056 DELAY_200ms:
-000020 0EAC           00057     MOVLW 0Xac
-000022 6E0C           00058     MOVWF DCounter1
-000024 0E13           00059     MOVLW 0X13
-000026 6E0D           00060     MOVWF DCounter2
-000028 0E06           00061     MOVLW 0X06
-00002A 6E0E           00062     MOVWF DCounter3
-00002C                00063 LOOPD2:
-00002C 2E0C           00064     DECFSZ DCounter1, 1
-00002E EF?? F???      00065     GOTO LOOPD2
-000032 2E0D           00066     DECFSZ DCounter2, 1
-000034 EF?? F???      00067     GOTO LOOPD2
-000038 2E0E           00068     DECFSZ DCounter3, 1
-00003A EF?? F???      00069     GOTO LOOPD2
-00003E 0000           00070     NOP
-000040 0012           00071     RETURN
-                      00072 
-000042                00073 START:
-000042 0E00           00074     MOVLW B'00000000'   ;TODO O PORTB 
-000044 6E93           00075     MOVWF TRISB         ;COMO SAIDA
-000046 6A81           00076     CLRF PORTB          ;LIMPA PORTB
-000048 EF?? F???      00077     GOTO MAIN
-                      00078 
-00004C                00079 MAIN:
-00004C 8A81           00080     BSF PORTB,5         ;LIGA BIT 5
-00004E 8C81           00081     BSF PORTB,6         ;LIGA BIT 6
-000050 8E81           00082     BSF PORTB,7         ;LIGA BIT 7
-                      00083     
-000052 EC?? F???      00084     CALL DELAY_200ms
-                      00085     
-000056 9A81           00086     BCF PORTB,5         ;LIGA BIT 5
-000058 9C81           00087     BCF PORTB,6         ;LIGA BIT 6
-00005A 9E81           00088     BCF PORTB,7         ;LIGA BIT 7
-                      00089     
-00005C EC?? F???      00090     CALL DELAY_1s
-                      00091     
-000060 EF?? F???      00092     GOTO MAIN
-                      00093 
-                      00094 ;******************************************************************************
-                      00095 ;End
-                      00096     END
-MPASM 5.77                          MAIN.ASM   12-26-2020  18:43:31         PAGE  3
+000002 6E0C           00041     MOVWF DCounter1
+000004 0E5E           00042     MOVLW 0x5E
+000006 6E0D           00043     MOVWF DCounter2
+000008 0E1A           00044     MOVLW 0x1A
+00000A 6E0E           00045     MOVWF DCounter3
+00000C                00046 LOOPD1:
+00000C 2E0C           00047     DECFSZ DCounter1, 1
+00000E EF?? F???      00048     GOTO LOOPD1
+000012 2E0D           00049     DECFSZ DCounter2, 1
+000014 EF?? F???      00050     GOTO LOOPD1
+000018 2E0E           00051     DECFSZ DCounter3, 1
+00001A EF?? F???      00052     GOTO LOOPD1
+00001E 0012           00053     RETURN
+                      00054     
+000020                00055 DELAY_200ms:
+000020 0EAC           00056     MOVLW 0xAC
+000022 6E0C           00057     MOVWF DCounter1
+000024 0E13           00058     MOVLW 0x13
+000026 6E0D           00059     MOVWF DCounter2
+000028 0E06           00060     MOVLW 0x06
+00002A 6E0E           00061     MOVWF DCounter3
+00002C                00062 LOOPD2:
+00002C 2E0C           00063     DECFSZ DCounter1, 1
+00002E EF?? F???      00064     GOTO LOOPD2
+000032 2E0D           00065     DECFSZ DCounter2, 1
+000034 EF?? F???      00066     GOTO LOOPD2
+000038 2E0E           00067     DECFSZ DCounter3, 1
+00003A EF?? F???      00068     GOTO LOOPD2
+00003E 0000           00069     NOP
+000040 0012           00070     RETURN
+                      00071 
+000042                00072 START:
+000042 0E00           00073     MOVLW B'00000000'
+000044 6E93           00074     MOVWF TRISB         ;PORTB as output
+000046 6A81           00075     CLRF PORTB
+000048 EF?? F???      00076     GOTO MAIN
+                      00077 
+00004C                00078 MAIN:
+00004C 8A81           00079     BSF PORTB,5         ;set bit 5
+00004E 8C81           00080     BSF PORTB,6         ;set bit 6
+000050 8E81           00081     BSF PORTB,7         ;set bit 7
+                      00082     
+000052 EC?? F???      00083     CALL DELAY_200ms
+                      00084     
+000056 9A81           00085     BCF PORTB,5         ;clear bit 5
+000058 9C81           00086     BCF PORTB,6         ;clear bit 6
+00005A 9E81           00087     BCF PORTB,7         ;clear bit 7
+                      00088     
+00005C EC?? F???      00089     CALL DELAY_1s
+                      00090     
+000060 EF?? F???      00091     GOTO MAIN
+                      00092 
+                      00093 ;******************************************************************************
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00094 ;End
+                      00095     END
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE  4
 
 
 SYMBOL TABLE
@@ -175,7 +183,7 @@ BCLIP                             00000003
 BF                                00000000
 BGST                              00000005
 BOR                               00000000
-MPASM 5.77                          MAIN.ASM   12-26-2020  18:43:31         PAGE  4
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE  5
 
 
 SYMBOL TABLE
@@ -234,7 +242,7 @@ CLKO                              00000006
 CM0                               00000000
 CM1                               00000001
 CM2                               00000002
-MPASM 5.77                          MAIN.ASM   12-26-2020  18:43:31         PAGE  5
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE  6
 
 
 SYMBOL TABLE
@@ -293,7 +301,7 @@ EEIP                              00000004
 EEPGD                             00000007
 FAST                              00000001
 FERR                              00000002
-MPASM 5.77                          MAIN.ASM   12-26-2020  18:43:31         PAGE  6
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE  7
 
 
 SYMBOL TABLE
@@ -352,7 +360,7 @@ INT2E                             00000004
 INT2F                             00000001
 INT2IE                            00000004
 INT2IF                            00000001
-MPASM 5.77                          MAIN.ASM   12-26-2020  18:43:31         PAGE  7
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE  8
 
 
 SYMBOL TABLE
@@ -411,7 +419,7 @@ LATD                              00000F8C
 LATD0                             00000000
 LATD1                             00000001
 LATD2                             00000002
-MPASM 5.77                          MAIN.ASM   12-26-2020  18:43:31         PAGE  8
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE  9
 
 
 SYMBOL TABLE
@@ -470,7 +478,7 @@ OSC2                              00000006
 OSCCON                            00000FD3
 OSCFIE                            00000007
 OSCFIF                            00000007
-MPASM 5.77                          MAIN.ASM   12-26-2020  18:43:31         PAGE  9
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE 10
 
 
 SYMBOL TABLE
@@ -529,7 +537,7 @@ POSTDEC2                          00000FDD
 POSTINC0                          00000FEE
 POSTINC1                          00000FE6
 POSTINC2                          00000FDE
-MPASM 5.77                          MAIN.ASM   12-26-2020  18:43:31         PAGE 10
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE 11
 
 
 SYMBOL TABLE
@@ -588,7 +596,7 @@ RC2                               00000002
 RC3                               00000003
 RC4                               00000004
 RC5                               00000005
-MPASM 5.77                          MAIN.ASM   12-26-2020  18:43:31         PAGE 11
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE 12
 
 
 SYMBOL TABLE
@@ -647,7 +655,7 @@ SP3                               00000003
 SP4                               00000004
 SPBRG                             00000FAF
 SPBRGH                            00000FB0
-MPASM 5.77                          MAIN.ASM   12-26-2020  18:43:31         PAGE 12
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE 13
 
 
 SYMBOL TABLE
@@ -706,7 +714,7 @@ T2CKPS1                           00000001
 T2CON                             00000FCA
 T2OUTPS0                          00000003
 T2OUTPS1                          00000004
-MPASM 5.77                          MAIN.ASM   12-26-2020  18:43:31         PAGE 13
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE 14
 
 
 SYMBOL TABLE
@@ -765,7 +773,7 @@ TOUTPS3                           00000006
 TRISA                             00000F92
 TRISA0                            00000000
 TRISA1                            00000001
-MPASM 5.77                          MAIN.ASM   12-26-2020  18:43:31         PAGE 14
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE 15
 
 
 SYMBOL TABLE
@@ -824,7 +832,7 @@ TXIF                              00000004
 TXIP                              00000004
 TXREG                             00000FAD
 TXSTA                             00000FAC
-MPASM 5.77                          MAIN.ASM   12-26-2020  18:43:31         PAGE 15
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE 16
 
 
 SYMBOL TABLE
@@ -883,7 +891,7 @@ _DEBUG_OFF_4L                     000000FF
 _DEBUG_ON_4L                      0000007F
 _DEVID1                           003FFFFE
 _DEVID2                           003FFFFF
-MPASM 5.77                          MAIN.ASM   12-26-2020  18:43:31         PAGE 16
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE 17
 
 
 SYMBOL TABLE
@@ -942,7 +950,7 @@ _WDTPS_2048_2H                    000000F7
 _WDTPS_256_2H                     000000F1
 _WDTPS_2_2H                       000000E3
 _WDTPS_32768_2H                   000000FF
-MPASM 5.77                          MAIN.ASM   12-26-2020  18:43:31         PAGE 17
+MPASM 5.77                          MAIN.ASM   12-27-2020  6:31:00         PAGE 18
 
 
 SYMBOL TABLE
@@ -976,7 +984,7 @@ _XINST_ON_4L                      000000FF
 __18F4520                         00000001
 
 Errors   :     0
-Warnings :     0 reported,     0 suppressed
+Warnings :     3 reported,     0 suppressed
 Messages :     0 reported,     0 suppressed
 
 
